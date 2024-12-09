@@ -5,7 +5,7 @@
 FROM node:20.4.0 AS build-frontend
 WORKDIR /app
 COPY ./demo/ ./demo
-ENV CAPELLA_CONTEXT_COLLECTOR_FRONTEND_PATH=/app/demo/dist
+ENV CCDD_FRONTEND_PATH=/app/demo/dist
 WORKDIR /app/demo
 RUN npm install && npm run build
 
@@ -18,7 +18,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=build-frontend /app/demo/dist ./demo/dist
-COPY ./capella_context_collector ./capella_context_collector
+COPY ./capella_context_diagrams_demonstrator ./capella_context_diagrams_demonstrator
 COPY ./pyproject.toml ./
 COPY .git .git
 RUN pip install --no-cache-dir .

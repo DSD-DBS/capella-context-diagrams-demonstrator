@@ -6,7 +6,7 @@
 FRONTEND_BASE ?= node:20
 BACKEND_BASE ?= python:3.12-slim-bookworm
 PORT ?= 8000
-IMAGE_NAME ?= capella-context-collector
+IMAGE_NAME ?= capella-context-diagrams-demonstrator
 VERSION ?= latest
 
 build:

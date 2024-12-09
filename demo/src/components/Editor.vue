@@ -1,10 +1,11 @@
 /*
- * Copyright DB InfraGO AG and contributors
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright DB InfraGO AG and contributors
+* SPDX-License-Identifier: Apache-2.0
+*/
 
 <script setup>
 import FileMenu from "@/components/FileMenu.vue";
+import HelpMenu from "@/components/HelpMenu.vue";
 import Settings from "@/components/Settings.vue";
 import SVGDisplay from "@/components/SVGDisplay.vue";
 import TargetBrowser from "@/components/TargetBrowser.vue";
@@ -36,6 +37,7 @@ onMounted(async () => {
             <h1 class="text-2xl font-semibold">CCDD</h1>
             <FileMenu />
             <slot name="edit-menu" />
+            <HelpMenu />
         </div>
         <div class="flex gap-2 items-center">
             <slot name="run-button" />
@@ -67,8 +69,8 @@ onMounted(async () => {
         </Splitter>
     </main>
     <footer class="flex items-center justify-between px-4 py-2">
-        <a href="https://github.com/DSD-DBS/capella-context-collector/issues" target="_blank" rel="noopener noreferrer"
-            class="flex items-center gap-2">
+        <a href="https://github.com/DSD-DBS/capella-context-diagrams-demonstrator/issues" target="_blank"
+            rel="noopener noreferrer" class="flex items-center gap-2">
             <i class="pi pi-github"></i>
             <span>Report an issue</span>
         </a>

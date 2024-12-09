@@ -200,7 +200,7 @@ async def get_attributes(uuid: str) -> JSONResponse:
 @click.command()
 @click.version_option(
     version=capella_context_diagrams_demonstrator.__version__,
-    prog_name="capella-context-collector",
+    prog_name="capella-context-diagrams-demonstrator",
     message="%(prog)s %(version)s",
 )
 @click.argument("model", type=capellambse.ModelCLI())
