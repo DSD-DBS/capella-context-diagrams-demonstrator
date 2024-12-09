@@ -1,0 +1,62 @@
+/*
+ * Copyright DB InfraGO AG and contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-light: rgb(255, 255, 255);
+    --color-dark: #1e1e1e;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+body {
+    height: 100svh;
+    color: var(--color-dark);
+    background: var(--color-light);
+    --p-splitter-background: var(--color-light);
+    --p-breadcrumb-background: var(--color-light);
+    transition: color 0.5s, background-color 0.5s;
+    line-height: 1.4;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+}
+
+.p-breadcrumb-item-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dark body {
+    color: var(--color-light);
+    background: var(--color-dark);
+    --p-splitter-background: var(--color-dark);
+    --p-breadcrumb-background: var(--color-dark);
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}

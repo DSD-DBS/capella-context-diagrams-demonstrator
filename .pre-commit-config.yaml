@@ -64,7 +64,7 @@ repos:
           - "<!--| ~| -->"
       - id: insert-license
         name: Insert Apache license headers (C-style comments)
-        files: '\.(?:s?css|js|ts)$'
+        files: '\.(?:s?css|js|ts|vue)$'
         exclude: '(?:^|/)\..+'
         args:
           - --detect-license-in-X-top-lines=15
@@ -110,6 +110,8 @@ repos:
     rev: v1.13.0
     hooks:
       - id: mypy
+        additional_dependencies:
+          - "types-PyYAML"
   - repo: https://github.com/fsfe/reuse-tool
     rev: v5.0.2
     hooks:

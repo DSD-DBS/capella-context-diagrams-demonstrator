@@ -38,6 +38,30 @@ pip install -e '.[docs,test]'
 pre-commit install
 ```
 
+# Development
+
+To develop the frontend, use the following command:
+
+```sh
+cd demo
+npm install
+npm run dev
+```
+
+To develop the backend, first run the following command inside the `demo` folder to create the static files for the backend:
+
+```sh
+npm run build
+```
+
+Then run the following command in the root folder to start the backend server:
+
+```sh
+capella-context-diagrams-demonstrator {path_to_model}
+```
+
+The backend server and static frontend will be running at `http://localhost:8000` and the live frontend will be served at `http://localhost:5173`.
+
 # Contributing
 
 We'd love to see your bug reports and improvement suggestions! Please take a

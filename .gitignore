@@ -156,3 +156,11 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+#region Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
