@@ -21,7 +21,7 @@ from fastapi.staticfiles import StaticFiles
 
 import capella_context_diagrams_demonstrator
 
-from . import data_model, helpers
+from . import custom_diagram, data_model, helpers
 
 PORT = int(os.getenv("CCDD_PORT") or 8000)
 HOST = os.environ.get("CCDD_HOST", "127.0.0.1")
@@ -172,8 +172,21 @@ async def render_diagram(
     diag_type, attrs = next(iter(data.items()), ("", {}))
     try:
         diag = getattr(app.state.obj, diag_type)
-        content = helpers.modify_svg(diag.render("svg", **attrs))
-        return helpers.make_json_response("success", diag.name, content, 200)
+        assert isinstance(attrs, dict)
+        if diag_type == "custom_diagram":
+            instructions = attrs.pop("collect", {})
+            content = diag.render(
+                "svg",
+                collect=custom_diagram.CustomCollectorWrapper(
+                    app.state.obj, instructions
+                )(),
+                **attrs,
+            )
+        else:
+            content = diag.render("svg", **attrs)
+        return helpers.make_json_response(
+            "success", diag.name, helpers.modify_svg(content), 200
+        )
     except Exception as e:
         return helpers.make_error_json_response(str(e), 500)
 
