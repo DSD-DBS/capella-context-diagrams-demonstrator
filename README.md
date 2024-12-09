@@ -40,18 +40,20 @@ pre-commit install
 
 # Development
 
-To develop the frontend, use the following command:
+First run the following commands to create the static files for the backend:
 
 ```sh
 cd demo
 npm install
-npm run dev
+export VITE_BACKEND_HOST=127.0.0.1
+export VITE_BACKEND_PORT=8000
+npm run build
 ```
 
-To develop the backend, first run the following command inside the `demo` folder to create the static files for the backend:
+To develop the frontend, use the following command:
 
 ```sh
-npm run build
+npm run dev
 ```
 
 Then run the following command in the root folder to start the backend server:

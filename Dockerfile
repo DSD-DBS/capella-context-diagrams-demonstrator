@@ -1,11 +1,17 @@
 # Copyright DB InfraGO AG and contributors
 # SPDX-License-Identifier: Apache-2.0
 
+ARG VITE_BACKEND_HOST
+ARG VITE_BACKEND_PORT
+ARG MODEL_PATH
+
 # Build frontend
 FROM node:20.4.0 AS build-frontend
 WORKDIR /app
 COPY ./demo/ ./demo
-ENV CCDD_FRONTEND_PATH=/app/demo/dist
+ENV VITE_BACKEND_HOST=$VITE_BACKEND_HOST
+ENV VITE_BACKEND_PORT=$VITE_BACKEND_PORT
+ENV VITE_FRONTEND_PATH=/app/demo/dist
 WORKDIR /app/demo
 RUN npm install && npm run build
 
@@ -23,10 +29,11 @@ COPY ./pyproject.toml ./
 COPY .git .git
 RUN pip install --no-cache-dir .
 
-ARG PORT=8000
-EXPOSE ${PORT}
-ENV PORT=${PORT}
+ENV VITE_BACKEND_HOST=$VITE_BACKEND_HOST
+ENV VITE_BACKEND_PORT=$VITE_BACKEND_PORT
+
+EXPOSE ${VITE_BACKEND_PORT}
 
 USER nobody
 
-CMD ["capella-context-diagrams-demonstrator"]
+CMD ["capella-context-diagrams-demonstrator", "${MODEL_PATH}"]

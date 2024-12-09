@@ -7,7 +7,12 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-const BACKEND_URL = "http://localhost:8000/api";
+const BACKEND_URL =
+    "http://" +
+    import.meta.env.VITE_BACKEND_HOST +
+    ":" +
+    import.meta.env.VITE_BACKEND_PORT +
+    "/api";
 
 export const useSettingsStore = defineStore("settings", () => {
     const dark = ref(false);
@@ -68,6 +73,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
     async function getAllElements() {
         try {
+            console.log(BACKEND_URL);
             const response = await axios.get(BACKEND_URL + "/elements");
             modelElements.value = response.data.elements;
         } catch (error) {
