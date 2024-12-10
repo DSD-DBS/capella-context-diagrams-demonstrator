@@ -2,40 +2,40 @@
 # SPDX-License-Identifier: Apache-2.0
 
 custom_diagram:
-    slim_center_box: true
-    display_symbols_as_boxes: true
-    unify_edge_direction: SMART
-    collect:
-        include:
-            - name: involved_activities
-              get:
-                  - name: inputs
-                    include:
-                        - name: exchanges
-                  - name: outputs
-                    include:
-                        - name: exchanges
-                  - name: ports
-                    include:
-                        - name: exchanges
-                        - name: links
-                  - name: physical_ports
-                    include:
-                        - name: links
-            - name: involved_functions
-              get:
-                  - name: inputs
-                    include:
-                        - name: exchanges
-                  - name: outputs
-                    include:
-                        - name: exchanges
-                  - name: ports
-                    include:
-                        - name: exchanges
-                        - name: links
-                  - name: physical_ports
-                    include:
-                        - name: links
+  slim_center_box: true
+  display_symbols_as_boxes: true
+  unify_edge_direction: SMART
+  collect:
+    include:
+      - name: involved_activities
+        get:
+          - name: inputs
+            include:
+              - name: exchanges
+          - name: outputs
+            include:
+              - name: exchanges
+          - name: ports
+            include:
+              - name: exchanges
+              - name: links
+          - name: physical_ports
+            include:
+              - name: links
+      - name: involved_functions
+        get:
+          - name: inputs
+            include:
+              - name: exchanges
+          - name: outputs
+            include:
+              - name: exchanges
+          - name: ports
+            include:
+              - name: exchanges
+              - name: links
+          - name: physical_ports
+            include:
+              - name: links
 # A similar built-in diagram can be created with the following configuration:
 # data_flow_view

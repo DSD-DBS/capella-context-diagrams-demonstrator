@@ -1,7 +1,7 @@
 /*
- * Copyright DB InfraGO AG and contributors
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright DB InfraGO AG and contributors
+* SPDX-License-Identifier: Apache-2.0
+*/
 
 <script setup>
 import { useSettingsStore } from '@/stores/settings';
@@ -48,7 +48,7 @@ const search = (event) => {
             filteredElements.value = [...settings.modelElements];
         } else {
             filteredElements.value = settings.modelElements.filter((elem) => {
-                return elem.name.toLowerCase().startsWith(event.query.toLowerCase()) || elem.uuid.startsWith(event.query);
+                return elem.name.toLowerCase().includes(event.query.toLowerCase()) || elem.uuid.includes(event.query);
             });
         }
     }, 250);
@@ -66,7 +66,8 @@ onMounted(async () => {
             </Breadcrumb>
             <InputGroup class="flex-1 p-2">
                 <AutoComplete v-model="selectedElement" optionLabel="uuid" :suggestions="filteredElements"
-                    :invalid="!settings.targetUUID" @complete="search" :completeOnFocus="true">
+                    :invalid="!settings.targetUUID" @complete="search" :completeOnFocus="true"
+                    @keydown.enter="loadTarget">
                     <template #option="slotProps">
                         <div class="flex items-center">
                             <div>{{ slotProps.option.name }}</div>
@@ -75,7 +76,7 @@ onMounted(async () => {
                     </template>
                 </AutoComplete>
                 <InputGroupAddon>
-                    <Button icon="pi pi-search" severity="secondary" variant="text" @click="loadTarget" />
+                    <Button type="submit" icon="pi pi-search" severity="secondary" variant="text" @click="loadTarget" />
                 </InputGroupAddon>
             </InputGroup>
         </div>

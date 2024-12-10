@@ -1,35 +1,33 @@
 /*
- * Copyright DB InfraGO AG and contributors
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright DB InfraGO AG and contributors
+* SPDX-License-Identifier: Apache-2.0
+*/
 
 <script setup>
-import Button from 'primevue/button';
-import TieredMenu from 'primevue/tieredmenu';
-import { ref } from "vue";
-
-const menu = ref();
+import Menu from '@/components/Menu.vue';
 
 const items = [
     {
         label: 'Documentation',
-        url: 'https://dsd-dbs.github.io/capella-context-diagrams-demonstrator',
+        command: () => {
+            window.open('https://dsd-dbs.github.io/capella-context-diagrams-demonstrator', '_blank');
+        },
     },
     {
         label: 'Report Issue',
-        url: 'https://github.com/DSD-DBS/capella-context-diagrams-demonstrator/issues',
+        command: () => {
+            window.open('https://github.com/DSD-DBS/capella-context-diagrams-demonstrator/issues', '_blank');
+        },
+    },
+    {
+        label: 'Show Release Notes',
+        command: () => {
+            window.open('https://github.com/DSD-DBS/capella-context-diagrams-demonstrator/releases', '_blank');
+        },
     },
 ];
-
-const toggle = (event) => {
-    menu.value.toggle(event);
-};
 </script>
 
 <template>
-    <div class="card flex justify-center">
-        <Button type="button" label="Help" @click="toggle" aria-haspopup="true" aria-controls="overlay_file"
-            severity="secondary" variant="text" />
-        <TieredMenu ref="menu" id="overlay_file" :model="items" popup />
-    </div>
+    <Menu label="Help" :items="items" overlay_id="overlay_help" />
 </template>

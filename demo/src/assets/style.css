@@ -30,7 +30,6 @@ body {
     background: var(--color-light);
     --p-splitter-background: var(--color-light);
     --p-breadcrumb-background: var(--color-light);
-    transition: color 0.5s, background-color 0.5s;
     line-height: 1.4;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;

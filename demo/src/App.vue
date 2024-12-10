@@ -1,20 +1,24 @@
 /*
- * Copyright DB InfraGO AG and contributors
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright DB InfraGO AG and contributors
+* SPDX-License-Identifier: Apache-2.0
+*/
 
 <script setup>
-import { ProgressSpinner } from "primevue";
-import Button from 'primevue/button';
-import TieredMenu from 'primevue/tieredmenu';
+import { Button, ProgressSpinner, Splitter, SplitterPanel } from 'primevue';
 import { ref } from "vue";
-import Editor from './components/Editor.vue';
+import EditMenu from './components/EditMenu.vue';
+import FileMenu from './components/FileMenu.vue';
+import HelpMenu from './components/HelpMenu.vue';
+import Settings from './components/Settings.vue';
+import SVGDisplay from './components/SVGDisplay.vue';
+import TargetBrowser from './components/TargetBrowser.vue';
+import ThemeButton from './components/ThemeButton.vue';
 import { useSettingsStore } from './stores/settings';
 
 const settings = useSettingsStore();
 const loading = ref(false);
 const editorRef = ref();
-const editMenuRef = ref();
+const settingsModal = ref();
 
 function handleMount(editorInstance) {
     editorRef.value = editorInstance;
@@ -124,77 +128,6 @@ function triggerSourceCommand(command) {
     editorRef.value?.trigger('source', command);
 }
 
-function isApple() {
-    const platform =
-        window.navigator?.userAgentData?.platform || window.navigator.platform;
-    const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
-    const iosPlatforms = ["iPhone", "iPad", "iPod"];
-
-    if ((macosPlatforms.indexOf(platform) !== -1) || (iosPlatforms.indexOf(platform) !== -1)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-const superKey = isApple() ? '⌘' : 'Ctrl';
-
-const items = [
-    {
-        label: 'Undo',
-        shortcut: superKey + ' + Z',
-        command: () => triggerKeyboardCommand('undo'),
-    },
-    {
-        label: 'Redo',
-        shortcut: superKey + ' + Y',
-        command: () => triggerKeyboardCommand('redo'),
-    },
-    {
-        separator: true,
-    },
-    {
-        label: 'Cut',
-        shortcut: superKey + ' + X',
-        command: () => triggerSourceCommand('editor.action.clipboardCutAction'),
-    },
-    {
-        label: 'Copy',
-        shortcut: superKey + ' + C',
-        command: () => triggerSourceCommand('editor.action.clipboardCopyAction'),
-    },
-    {
-        label: 'Paste',
-        shortcut: superKey + ' + V',
-        command: () => triggerSourceCommand('editor.action.clipboardPasteAction'),
-    },
-    {
-        separator: true,
-    },
-    {
-        label: 'Find',
-        shortcut: superKey + ' + F',
-        command: () => triggerKeyboardCommand('actions.find'),
-    },
-    {
-        label: 'Replace',
-        shortcut: superKey + ' + H',
-        command: () => triggerKeyboardCommand('editor.action.startFindReplaceAction'),
-    },
-    {
-        separator: true,
-    },
-    {
-        label: 'Toggle Line Comment',
-        shortcut: superKey + ' + Shift + 7',
-        command: () => triggerSourceCommand('editor.action.commentLine'),
-    },
-];
-
-function toggle(event) {
-    editMenuRef.value.toggle(event);
-}
-
 async function run() {
     loading.value = true;
     await settings.renderDiagram();
@@ -203,35 +136,49 @@ async function run() {
 </script>
 
 <template>
-    <Editor>
-        <template #edit-menu>
-            <div class="card flex justify-center">
-                <Button type="button" label="Edit" @click="toggle" aria-haspopup="true" aria-controls="overlay_edit"
-                    severity="secondary" variant="text" />
-                <TieredMenu ref="editMenuRef" id="overlay_edit" :model="items" popup>
-                    <template #item="{ item, props, hasSubmenu }">
-                        <a class="flex items-center justify-between" v-bind="props.action">
-                            <span class="ml-2">{{ item.label }}</span>
-                            <span v-if="item.shortcut"
-                                class="border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{
-                                    item.shortcut }}</span>
-                            <i v-if="hasSubmenu" class="pi pi-angle-right"></i>
-                        </a>
-                    </template>
-                </TieredMenu>
-            </div>
-        </template>
-        <template #run-button>
-            <Button v-tooltip="{ value: superKey + ' + Enter', showDelay: 1000, hideDelay: 300 }" label="Run" @click="run"
-                :disabled="loading" icon="pi pi-play" />
+    <nav class="flex gap-2 items-center px-4 py-2">
+        <div class="flex flex-1 items-center gap-2">
+            <h1 class="text-2xl font-semibold">CCDD</h1>
+            <FileMenu />
+            <EditMenu :trigger-keyboard-command="triggerKeyboardCommand"
+                :trigger-source-command="triggerSourceCommand" />
+            <HelpMenu />
+        </div>
+        <div class="flex gap-2 items-center">
+            <Button v-tooltip="{ value: settings.superKey + ' + Enter', showDelay: 1000, hideDelay: 300 }" label="Run"
+                @click="run" :disabled="loading" icon="pi pi-play" />
             <ProgressSpinner
                 :style="'width: 1.5rem; height: 1.5rem; position: absolute; margin: 0 -2.5rem;' + (loading ? 'visibility: visible;' : 'visibility: hidden;')"
                 strokeWidth="8" fill="transparent" />
-        </template>
-        <template #editor>
-            <vue-monaco-editor v-model:value="settings.yamlCode" :theme="settings.dark ? 'vs-dark' : 'vs'"
-                :options="settings.editorOptions" language="yaml" @mount="handleMount"
-                @beforeMount="handleBeforeMount" />
-        </template>
-    </Editor>
+        </div>
+        <div class="flex flex-1 justify-end items-center">
+            <Button icon="pi pi-cog" aria-label="Open settings" @click="settingsModal.visible = true"
+                severity="secondary" text />
+            <ThemeButton />
+        </div>
+    </nav>
+    <main class="flex-1 min-h-0 px-4">
+        <Splitter class="h-full">
+            <SplitterPanel class="flex flex-col h-full">
+                <Splitter layout="vertical" class="h-full">
+                    <SplitterPanel class="flex flex-col">
+                        <vue-monaco-editor v-model:value="settings.yamlCode" :theme="settings.dark ? 'vs-dark' : 'vs'"
+                            :options="settings.editorOptions" language="yaml" @mount="handleMount"
+                            @beforeMount="handleBeforeMount" />
+
+                    </SplitterPanel>
+                    <SplitterPanel class="flex flex-col" v-if="settings.previewConfigs.showBrowser">
+                        <TargetBrowser />
+                    </SplitterPanel>
+                </Splitter>
+            </SplitterPanel>
+            <SplitterPanel class="flex flex-col">
+                <SVGDisplay />
+            </SplitterPanel>
+        </Splitter>
+    </main>
+    <footer class="flex items-center justify-end px-4 py-2">
+        <p>© 2024 DB InfraGO AG</p>
+    </footer>
+    <Settings ref="settingsModal" />
 </template>

@@ -1,7 +1,7 @@
 /*
- * Copyright DB InfraGO AG and contributors
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright DB InfraGO AG and contributors
+* SPDX-License-Identifier: Apache-2.0
+*/
 
 <script setup>
 import { useSettingsStore } from '@/stores/settings';
@@ -39,6 +39,11 @@ defineExpose({ visible });
                 <InputText id="font-size" name="font-size" v-model="editorOptions.fontSize" class="w-full"
                     v-keyfilter.int />
                 <label for="font-size">Font size</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText id="tab-size" name="font-size" v-model="editorOptions.tabSize" class="w-full"
+                    v-keyfilter.int />
+                <label for="tab-size">Tab size</label>
             </FloatLabel>
             <h2 class="text-lg font-semibold">Preview settings</h2>
             <div class="flex gap-2 items-center">

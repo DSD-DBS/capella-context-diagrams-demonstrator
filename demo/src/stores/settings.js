@@ -23,6 +23,7 @@ export const useSettingsStore = defineStore("settings", () => {
         formatOnPaste: true,
         folding: true,
         fontSize: 14,
+        tabSize: 2,
         minimap: {
             autohide: true,
         },
@@ -44,6 +45,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const tableContent = ref("<h1>No target selected</h1>");
     const tableBreadcrumbs = ref([]);
     const modelElements = ref([]);
+    const superKey = isApple() ? "⌘" : "Ctrl";
 
     async function addBreadcrum(uuid) {
         const name = await get_attributes(true, uuid);
@@ -184,6 +186,23 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     }
 
+    function isApple() {
+        const platform =
+            window.navigator?.userAgentData?.platform ||
+            window.navigator.platform;
+        const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+        const iosPlatforms = ["iPhone", "iPad", "iPod"];
+
+        if (
+            macosPlatforms.indexOf(platform) !== -1 ||
+            iosPlatforms.indexOf(platform) !== -1
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     return {
         dark,
         yamlCode,
@@ -204,5 +223,6 @@ export const useSettingsStore = defineStore("settings", () => {
         addBreadcrum,
         modelElements,
         getAllElements,
+        superKey,
     };
 });
