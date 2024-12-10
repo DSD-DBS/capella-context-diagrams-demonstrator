@@ -16,7 +16,7 @@ import yaml
 from capellambse.metamodel import cs, fa, information, la, oa, pa, sa
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 import capella_context_diagrams_demonstrator
@@ -105,6 +105,12 @@ def load_model(model: capellambse.MelodyModel) -> None:
 
 
 app.mount(
+    "/examples",
+    StaticFiles(directory=PATH_TO_FRONTEND / "examples"),
+    name="examples",
+)
+
+app.mount(
     "/assets",
     StaticFiles(directory=PATH_TO_FRONTEND / "assets"),
     name="assets",
@@ -117,6 +123,12 @@ async def root() -> HTMLResponse:
     return HTMLResponse(
         content=(PATH_TO_FRONTEND / "index.html").read_text(), status_code=200
     )
+
+
+@app.get("/favicon.ico", status_code=200)
+async def favicon() -> HTMLResponse:
+    """Serve the favicon."""
+    return FileResponse(PATH_TO_FRONTEND / "favicon.ico")
 
 
 @app.get("/api/elements")
