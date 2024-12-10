@@ -38,9 +38,7 @@ pip install -e '.[docs,test]'
 pre-commit install
 ```
 
-# Development
-
-First run the following commands to create the static files for the backend:
+Then run the following commands to create the static files for the backend:
 
 ```sh
 cd demo

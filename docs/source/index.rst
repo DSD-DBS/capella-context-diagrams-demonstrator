@@ -20,7 +20,7 @@ Quickstart
 
 .. note::
 
-    For more pre-defined diagram types, check out the [capellambse-context-diagrams documentation](https://dsd-dbs.github.io/capellambse-context-diagrams).
+    For more pre-defined diagram types, check out the `capellambse-context-diagrams documentation <https://dsd-dbs.github.io/capellambse-context-diagrams>`_.
 
 3.  Click `Run` or press `Ctrl + Enter`. This will generate the diagram and display it in the `Preview` panel.
 
@@ -31,7 +31,7 @@ Quickstart
 Render parameters
 -----------------
 
-All render parameters and their default values are as described in the [capellambse-context-diagrams documentation](https://dsd-dbs.github.io/capellambse-context-diagrams).
+All render parameters and their default values are as described in the `capellambse-context-diagrams documentation <https://dsd-dbs.github.io/capellambse-context-diagrams>`_.
 
 They can be set in the `Editor` as follows:
 
@@ -44,7 +44,7 @@ This will generate a context diagram without displaying the parent relation.
 
 Custom diagram collection description
 -------------------------------------
-The [Custom Diagram](https://dsd-dbs.github.io/capellambse-context-diagrams/realization_view/) is a special diagram type that allows you to define your own diagram collection. To define the Custom Diagram collection in CCDD, you can provide a YAML description of the collection in the `Editor`, e.g.:
+The `Custom Diagram <https://dsd-dbs.github.io/capellambse-context-diagrams/realization_view/>`_ is a special diagram type that allows you to define your own diagram collection. To define the Custom Diagram collection in CCDD, you can provide a YAML description of the collection in the `Editor`, e.g.:
 
 .. code-block:: yaml
   :linenos:

@@ -16,11 +16,11 @@ class CustomCollectorWrapper:
     def __init__(
         self,
         target: m.ModelElement,
-        instructions: dict[str, t.Any],
+        instructions: cabc.MutableMapping[str, t.Any],
     ) -> None:
         self.target: m.ModelElement = target
-        self.instructions: dict[str, t.Any] = instructions
-        self.repeat_instructions: dict[str, t.Any] = {}
+        self.instructions: cabc.MutableMapping[str, t.Any] = instructions
+        self.repeat_instructions: cabc.MutableMapping[str, t.Any] = {}
         self.repeat_depth: int = 0
         self.visited: set[str] = set()
 
@@ -28,7 +28,7 @@ class CustomCollectorWrapper:
         yield from self._perform_instructions(self.target, self.instructions)
 
     def _matches_filters(
-        self, obj: m.ModelElement, filters: dict[str, t.Any]
+        self, obj: m.ModelElement, filters: cabc.MutableMapping[str, t.Any]
     ) -> bool:
         for key, value in filters.items():
             if getattr(obj, key) != value:
@@ -36,7 +36,9 @@ class CustomCollectorWrapper:
         return True
 
     def _perform_instructions(
-        self, obj: m.ModelElement, instructions: dict[str, t.Any]
+        self,
+        obj: m.ModelElement,
+        instructions: cabc.MutableMapping[str, t.Any],
     ) -> cabc.Iterable[m.ModelElement]:
         if max_depth := instructions.pop("repeat", None):
             self.repeat_instructions = instructions
@@ -58,13 +60,16 @@ class CustomCollectorWrapper:
     def _perform_get_or_include(
         self,
         obj: m.ModelElement,
-        targets: dict[str, t.Any] | list[dict[str, t.Any]],
+        targets: (
+            cabc.MutableMapping[str, t.Any]
+            | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
+        ),
         *,
         create: bool,
     ) -> cabc.Iterable[m.ModelElement]:
-        if isinstance(targets, dict):
+        if isinstance(targets, cabc.Mapping):
             targets = [targets]
-        assert isinstance(targets, list)
+        assert isinstance(targets, cabc.MutableSequence)
         if self.repeat_depth > 0:
             self.repeat_depth += len(targets)
         for i in targets:
@@ -89,4 +94,10 @@ class CustomCollectorWrapper:
                 if create:
                     yield target
                 yield from self._perform_instructions(target, i)
-                yield from self._perform_instructions(target, i)
+
+
+def collect(
+    target: m.ModelElement, instructions: cabc.MutableMapping[str, t.Any]
+) -> cabc.Iterable[m.ModelElement]:
+    """Collect the context for a custom diagram."""
+    return CustomCollectorWrapper(target, instructions)()

@@ -11,13 +11,12 @@ import typing as t
 import capellambse
 import capellambse.model as m
 import click
+import fastapi
 import uvicorn
 import yaml
 from capellambse.metamodel import cs, fa, information, la, oa, pa, sa
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi import responses, staticfiles
+from fastapi.middleware import cors
 
 import capella_context_diagrams_demonstrator
 
@@ -47,10 +46,10 @@ ELEMENT_TYPES = frozenset(
     }
 )
 
-app = FastAPI()
+app = fastapi.FastAPI()
 
 app.add_middleware(
-    CORSMiddleware,
+    cors.CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -62,7 +61,7 @@ app.state.obj = None
 app.state.elements = []
 
 
-def collect_all_elements() -> list[dict[str, str]]:
+def collect_all_elements() -> None:
     """Collect all elements in the model."""
 
     def iter_children(parent: m.ModelElement) -> t.Iterator[m.ModelElement]:
@@ -72,7 +71,7 @@ def collect_all_elements() -> list[dict[str, str]]:
             acc = getattr(type(parent), attr, None)
             if (
                 isinstance(acc, m.DirectProxyAccessor) and not acc.rootelem
-            ) or isinstance(acc, m.RoleTagAccessor):
+            ) or isinstance(acc, m.Containment):
                 if acc.aslist is None:
                     if (child := getattr(parent, attr)) is not None:
                         yield child
@@ -92,8 +91,6 @@ def collect_all_elements() -> list[dict[str, str]]:
             if type(ele) in ELEMENT_TYPES:
                 app.state.elements.append({"uuid": ele.uuid, "name": ele.name})
 
-    return app.state.elements
-
 
 def load_model(model: capellambse.MelodyModel) -> None:
     """Load the model."""
@@ -106,35 +103,35 @@ def load_model(model: capellambse.MelodyModel) -> None:
 
 app.mount(
     "/examples",
-    StaticFiles(directory=PATH_TO_FRONTEND / "examples"),
+    staticfiles.StaticFiles(directory=PATH_TO_FRONTEND / "examples"),
     name="examples",
 )
 
 app.mount(
     "/assets",
-    StaticFiles(directory=PATH_TO_FRONTEND / "assets"),
+    staticfiles.StaticFiles(directory=PATH_TO_FRONTEND / "assets"),
     name="assets",
 )
 
 
 @app.get("/", status_code=200)
-async def root() -> HTMLResponse:
+async def root() -> responses.HTMLResponse:
     """Serve the frontend static files."""
-    return HTMLResponse(
+    return responses.HTMLResponse(
         content=(PATH_TO_FRONTEND / "index.html").read_text(), status_code=200
     )
 
 
 @app.get("/favicon.ico", status_code=200)
-async def favicon() -> HTMLResponse:
+async def favicon() -> responses.HTMLResponse:
     """Serve the favicon."""
-    return FileResponse(PATH_TO_FRONTEND / "favicon.ico")
+    return responses.FileResponse(PATH_TO_FRONTEND / "favicon.ico")
 
 
 @app.get("/api/elements")
-async def get_all_elements() -> JSONResponse:
+async def get_all_elements() -> responses.JSONResponse:
     """Get all elements in the model."""
-    return JSONResponse(
+    return responses.JSONResponse(
         content={
             "status": "success",
             "elements": app.state.elements,
@@ -144,22 +141,26 @@ async def get_all_elements() -> JSONResponse:
 
 
 @app.post("/api/target")
-async def set_target(request: data_model.SetTargetRequest) -> JSONResponse:
+async def set_target(
+    request: data_model.SetTargetRequest,
+) -> responses.JSONResponse:
     """Set the target object."""
     try:
         app.state.obj = app.state.model.by_uuid(request.uuid)
     except Exception as e:
-        return JSONResponse(
+        return responses.JSONResponse(
             content={"status": "error", "message": str(e)},
             status_code=500,
         )
-    return JSONResponse(content={"status": "success"}, status_code=200)
+    return responses.JSONResponse(
+        content={"status": "success"}, status_code=200
+    )
 
 
 @app.post("/api/render")
 async def render_diagram(
     request: data_model.RenderDiagramRequest,
-) -> JSONResponse:
+) -> responses.JSONResponse:
     """Render a diagram from a given yaml string."""
     if app.state.obj is None:
         return helpers.make_error_json_response("No target selected", 500)
@@ -187,9 +188,7 @@ async def render_diagram(
             instructions = attrs.pop("collect", {})
             content = diag.render(
                 "svg",
-                collect=custom_diagram.CustomCollectorWrapper(
-                    app.state.obj, instructions
-                )(),
+                collect=custom_diagram.collect(app.state.obj, instructions),
                 **attrs,
             )
         else:
@@ -202,15 +201,15 @@ async def render_diagram(
 
 
 @app.get("/api/attributes/")
-async def get_attributes(uuid: str) -> JSONResponse:
+async def get_attributes(uuid: str) -> responses.JSONResponse:
     """Get the attributes of the selected object."""
     if app.state.model is None:
-        return JSONResponse(
+        return responses.JSONResponse(
             content={"status": "error", "message": "No model loaded"},
             status_code=500,
         )
     obj = app.state.model.by_uuid(uuid)
-    return JSONResponse(
+    return responses.JSONResponse(
         content={
             "status": "success",
             "name": obj.name,

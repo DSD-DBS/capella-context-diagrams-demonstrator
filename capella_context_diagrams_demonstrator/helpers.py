@@ -5,22 +5,23 @@
 from __future__ import annotations
 
 import html
-import re
 
 import markupsafe
-from fastapi.responses import JSONResponse
+from fastapi import responses
 from lxml import etree
 
 
 def modify_h1_tag(content: str) -> markupsafe.Markup:
     """Modify the h1 tag in the content."""
-    content = re.sub(
-        r"<h1.*?>",
-        '<h1 style="display: flex; align-items: baseline; '
-        'gap: 5px; font-size: 120%;">',
-        content,
+    parser = etree.HTMLParser()
+    tree = etree.fromstring(content, parser)
+    for h1 in tree.iter("h1"):
+        h1.attrib["style"] = (
+            "display: flex; align-items: baseline; gap: 5px; font-size: 120%;"
+        )
+    return markupsafe.Markup(
+        etree.tostring(tree, pretty_print=True, method="html").decode()
     )
-    return markupsafe.Markup(content)
 
 
 def modify_svg(
@@ -51,9 +52,9 @@ def _get_error_svg(message: str) -> markupsafe.Markup:
 
 def make_json_response(
     status: str, svg_name: str, content: str, status_code: int
-) -> JSONResponse:
+) -> responses.JSONResponse:
     """Create a SVG JSON response."""
-    return JSONResponse(
+    return responses.JSONResponse(
         content={
             "status": status,
             "svg": {
@@ -65,7 +66,9 @@ def make_json_response(
     )
 
 
-def make_error_json_response(message: str, status_code: int) -> JSONResponse:
+def make_error_json_response(
+    message: str, status_code: int
+) -> responses.JSONResponse:
     """Create an error JSON response."""
     return make_json_response(
         "error", "error", _get_error_svg(message), status_code

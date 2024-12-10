@@ -1,8 +1,8 @@
 # Copyright DB InfraGO AG and contributors
 # SPDX-License-Identifier: Apache-2.0
 
-ARG VITE_BACKEND_HOST
-ARG VITE_BACKEND_PORT
+ARG VITE_BACKEND_HOST=127.0.0.1
+ARG VITE_BACKEND_PORT=8000
 ARG MODEL_PATH
 
 # Build frontend

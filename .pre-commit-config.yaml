@@ -65,7 +65,7 @@ repos:
       - id: insert-license
         name: Insert Apache license headers (C-style comments)
         files: '\.(?:s?css|js|ts|vue)$'
-        exclude: '(?:^|/)\..+'
+        exclude: '(?:^|/)\..+|svg-pan-zoom\.min\.js'
         args:
           - --detect-license-in-X-top-lines=15
           - --license-filepath

@@ -26,7 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "capellambse>=0.6.6,<0.7",
+    "capellambse>=0.6.7,<0.7",
     "capellambse-context-diagrams",
     "click",
     "fastapi[standard]",
