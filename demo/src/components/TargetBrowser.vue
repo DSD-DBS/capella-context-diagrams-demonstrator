@@ -32,7 +32,7 @@ async function loadTarget() {
     if (selectedElement.value.uuid ?? false) {
         selectedElement.value = selectedElement.value.uuid;
     }
-    let result = await settings.setTarget(selectedElement.value);
+    let result = await settings.validateTarget(selectedElement.value);
     if (result.status === 'success') {
         settings.targetUUID = selectedElement.value;
         settings.tableBreadcrumbs = [];

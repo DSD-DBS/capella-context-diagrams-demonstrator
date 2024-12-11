@@ -5,8 +5,8 @@
 import pydantic
 
 
-class SetTargetRequest(pydantic.BaseModel):
-    """Request for setting the target object."""
+class ValidateTargetRequest(pydantic.BaseModel):
+    """Request for validating the target object."""
 
     uuid: str
 
@@ -15,3 +15,4 @@ class RenderDiagramRequest(pydantic.BaseModel):
     """Request for rendering a diagram from a given yaml string."""
 
     yaml: str
+    uuid: str

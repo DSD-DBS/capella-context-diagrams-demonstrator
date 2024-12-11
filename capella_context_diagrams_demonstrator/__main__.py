@@ -57,7 +57,6 @@ app.add_middleware(
 )
 
 app.state.model = None
-app.state.obj = None
 app.state.elements = []
 
 
@@ -140,13 +139,13 @@ async def get_all_elements() -> responses.JSONResponse:
     )
 
 
-@app.post("/api/target")
-async def set_target(
-    request: data_model.SetTargetRequest,
+@app.post("/api/validate")
+async def validate_target(
+    request: data_model.ValidateTargetRequest,
 ) -> responses.JSONResponse:
-    """Set the target object."""
+    """Validate the target object."""
     try:
-        app.state.obj = app.state.model.by_uuid(request.uuid)
+        app.state.model.by_uuid(request.uuid)
     except Exception as e:
         return responses.JSONResponse(
             content={"status": "error", "message": str(e)},
@@ -161,13 +160,11 @@ async def set_target(
 async def render_diagram(
     request: data_model.RenderDiagramRequest,
 ) -> responses.JSONResponse:
-    """Render a diagram from a given yaml string."""
-    if app.state.obj is None:
-        return helpers.make_error_json_response("No target selected", 500)
-
+    """Render a diagram from a given yaml string and target uuid."""
     try:
+        target = app.state.model.by_uuid(request.uuid)
         data = yaml.safe_load(request.yaml)
-    except yaml.YAMLError as e:
+    except Exception as e:
         return helpers.make_error_json_response(str(e), 400)
 
     if not isinstance(data, dict):
@@ -182,13 +179,13 @@ async def render_diagram(
 
     diag_type, attrs = next(iter(data.items()), ("", {}))
     try:
-        diag = getattr(app.state.obj, diag_type)
+        diag = getattr(target, diag_type)
         assert isinstance(attrs, dict)
         if diag_type == "custom_diagram":
             instructions = attrs.pop("collect", {})
             content = diag.render(
                 "svg",
-                collect=custom_diagram.collect(app.state.obj, instructions),
+                collect=custom_diagram.collect(target, instructions),
                 **attrs,
             )
         else:

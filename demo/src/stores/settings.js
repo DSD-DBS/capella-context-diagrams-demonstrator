@@ -83,9 +83,9 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     }
 
-    async function setTarget(uuid) {
+    async function validateTarget(uuid) {
         try {
-            const response = await axios.post(BACKEND_URL + "/target", {
+            const response = await axios.post(BACKEND_URL + "/validate", {
                 uuid: uuid,
             });
             return response.data;
@@ -95,21 +95,16 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     }
 
-    async function renderDiagram(retry = true) {
+    async function renderDiagram() {
         try {
             const response = await axios.post(BACKEND_URL + "/render", {
                 yaml: yamlCode.value,
+                uuid: targetUUID.value,
             });
             svgName.value = response.data.svg.name;
             svgContent.value = response.data.svg.content;
         } catch (error) {
-            if (!retry) {
-                svgContent.value = error.response.data.svg.content;
-                return;
-            }
-            console.error("Retry rendering diagram:", error);
-            await setTarget(targetUUID.value);
-            await renderDiagram(false);
+            svgContent.value = error.response.data.svg.content;
         }
     }
 
@@ -128,7 +123,7 @@ export const useSettingsStore = defineStore("settings", () => {
                 return;
             }
             console.error("Error getting attributes:", error);
-            await setTarget(targetUUID.value);
+            await validateTarget(targetUUID.value);
             return await get_attributes(false, uuid);
         }
     }
@@ -213,7 +208,7 @@ export const useSettingsStore = defineStore("settings", () => {
         toggleDark,
         targetUUID,
         editorOptions,
-        setTarget,
+        validateTarget,
         saveSVG,
         saveCode,
         loadCode,
