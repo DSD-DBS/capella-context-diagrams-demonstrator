@@ -7,8 +7,14 @@ from __future__ import annotations
 import collections.abc as cabc
 import typing as t
 from dataclasses import dataclass
+from typing import TypeAlias
 
 import capellambse.model as m
+
+Targets: TypeAlias = (
+    cabc.MutableMapping[str, t.Any]
+    | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
+)
 
 
 @dataclass
@@ -24,7 +30,7 @@ def _perform_instructions(
     state: CollectorState,
     obj: m.ModelElement,
     instructions: cabc.MutableMapping[str, t.Any],
-) -> cabc.Iterable[m.ModelElement]:
+) -> cabc.Iterator[m.ModelElement]:
     if max_depth := instructions.pop("repeat", None):
         state.repeat_instructions = instructions
         state.repeat_depth = max_depth
@@ -44,13 +50,10 @@ def _perform_instructions(
 def _perform_get_or_include(
     state: CollectorState,
     obj: m.ModelElement,
-    targets: (
-        cabc.MutableMapping[str, t.Any]
-        | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
-    ),
+    targets: Targets,
     *,
     create: bool,
-) -> cabc.Iterable[m.ModelElement]:
+) -> cabc.Iterator[m.ModelElement]:
     if isinstance(targets, cabc.Mapping):
         targets = [targets]
     assert isinstance(targets, cabc.MutableSequence)
@@ -59,7 +62,7 @@ def _perform_get_or_include(
     for i in targets:
         attr = i["name"]
         target = getattr(obj, attr, None)
-        if isinstance(target, cabc.Iterable):
+        if isinstance(target, cabc.Iterator):
             filters = i.get("filter", {})
             for item in target:
                 if item.uuid in state.visited:
@@ -84,7 +87,7 @@ def _perform_get_or_include(
 
 def collect(
     target: m.ModelElement, instructions: cabc.MutableMapping[str, t.Any]
-) -> cabc.Iterable[m.ModelElement]:
+) -> cabc.Iterator[m.ModelElement]:
     """Collect the context for a custom diagram."""
     state = CollectorState(
         repeat_instructions={}, repeat_depth=0, visited=set()
