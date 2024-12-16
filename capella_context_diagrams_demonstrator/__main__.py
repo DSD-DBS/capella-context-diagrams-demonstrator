@@ -146,9 +146,22 @@ async def validate_target(
     """Validate the target object."""
     try:
         app.state.model.by_uuid(request.uuid)
+    except KeyError as e:
+        return responses.JSONResponse(
+            content={
+                "status": "error",
+                "message": str(e),
+                "name": "UUID not found",
+            },
+            status_code=400,
+        )
     except Exception as e:
         return responses.JSONResponse(
-            content={"status": "error", "message": str(e)},
+            content={
+                "status": "error",
+                "message": str(e),
+                "name": type(e).__name__,
+            },
             status_code=500,
         )
     return responses.JSONResponse(
@@ -164,17 +177,23 @@ async def render_diagram(
     try:
         target = app.state.model.by_uuid(request.uuid)
         data = yaml.safe_load(request.yaml)
+    except KeyError as e:
+        return helpers.make_error_json_response(str(e), 400, "UUID not found")
     except Exception as e:
-        return helpers.make_error_json_response(str(e), 400)
+        return helpers.make_error_json_response(str(e), 400, type(e).__name__)
 
     if not isinstance(data, dict):
         if not isinstance(data, str):
-            return helpers.make_error_json_response("Invalid yaml", 400)
+            return helpers.make_error_json_response(
+                "The YAML description must be a string or a dictionary",
+                400,
+                "Invalid YAML",
+            )
         data = {data: {}}
 
     if len(data) != 1:
         return helpers.make_error_json_response(
-            "Only one diagram can be rendered at a time", 400
+            "Only one diagram can be rendered at a time", 400, "Invalid YAML"
         )
 
     diag_type, attrs = next(iter(data.items()), ("", {}))
@@ -194,17 +213,12 @@ async def render_diagram(
             "success", diag.name, helpers.modify_svg(content), 200
         )
     except Exception as e:
-        return helpers.make_error_json_response(str(e), 500)
+        return helpers.make_error_json_response(str(e), 500, type(e).__name__)
 
 
 @app.get("/api/attributes/")
 async def get_attributes(uuid: str) -> responses.JSONResponse:
     """Get the attributes of the selected object."""
-    if app.state.model is None:
-        return responses.JSONResponse(
-            content={"status": "error", "message": "No model loaded"},
-            status_code=500,
-        )
     obj = app.state.model.by_uuid(uuid)
     return responses.JSONResponse(
         content={

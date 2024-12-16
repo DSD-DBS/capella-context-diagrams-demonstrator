@@ -39,7 +39,8 @@ async function loadTarget() {
         settings.addBreadcrum(selectedElement.value);
         return;
     }
-    toast.add({ severity: 'error', summary: 'Error', detail: result.message, life: 3000 });
+    selectedElement.value = settings.targetUUID;
+    toast.add({ severity: 'error', summary: result.name, detail: result.message, life: 3000 });
 }
 
 const search = (event) => {
@@ -67,7 +68,7 @@ onMounted(async () => {
             <InputGroup class="flex-1 p-2">
                 <AutoComplete v-model="selectedElement" optionLabel="uuid" :suggestions="filteredElements"
                     :invalid="!settings.targetUUID" @complete="search" :completeOnFocus="true"
-                    @keydown.enter="loadTarget">
+                    @keydown.enter="loadTarget" @option-select="loadTarget">
                     <template #option="slotProps">
                         <div class="flex items-center">
                             <div>{{ slotProps.option.name }}</div>

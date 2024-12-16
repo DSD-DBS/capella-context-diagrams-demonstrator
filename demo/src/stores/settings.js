@@ -48,7 +48,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const superKey = isApple() ? "⌘" : "Ctrl";
 
     async function addBreadcrum(uuid) {
-        const name = await get_attributes(true, uuid);
+        const name = await get_attributes(uuid);
         if (name) {
             tableBreadcrumbs.value.push({
                 label: name,
@@ -66,7 +66,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
     async function removeAllFollowingBreadcrumbs(index, uuid) {
         tableBreadcrumbs.value = tableBreadcrumbs.value.slice(0, index + 1);
-        await get_attributes(true, uuid);
+        await get_attributes(uuid);
     }
 
     function toggleDark() {
@@ -104,11 +104,12 @@ export const useSettingsStore = defineStore("settings", () => {
             svgName.value = response.data.svg.name;
             svgContent.value = response.data.svg.content;
         } catch (error) {
+            svgName.value = error.response.data.svg.name;
             svgContent.value = error.response.data.svg.content;
         }
     }
 
-    async function get_attributes(retry = true, uuid = targetUUID.value) {
+    async function get_attributes(uuid = targetUUID.value) {
         try {
             const response = await axios.get(BACKEND_URL + "/attributes", {
                 params: {
@@ -118,13 +119,7 @@ export const useSettingsStore = defineStore("settings", () => {
             tableContent.value = response.data.repr;
             return response.data.name;
         } catch (error) {
-            if (!retry) {
                 tableContent.value = error.response.data.message;
-                return;
-            }
-            console.error("Error getting attributes:", error);
-            await validateTarget(targetUUID.value);
-            return await get_attributes(false, uuid);
         }
     }
 

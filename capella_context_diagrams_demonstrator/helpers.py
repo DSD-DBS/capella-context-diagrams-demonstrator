@@ -67,9 +67,9 @@ def make_json_response(
 
 
 def make_error_json_response(
-    message: str, status_code: int
+    message: str, status_code: int, name: str = "error"
 ) -> responses.JSONResponse:
     """Create an error JSON response."""
     return make_json_response(
-        "error", "error", _get_error_svg(message), status_code
+        "error", name, _get_error_svg(message), status_code
     )

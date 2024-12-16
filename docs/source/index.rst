@@ -15,7 +15,8 @@ Quickstart
 2.  Inside the `Editor`, type the accessor name of a pre-defined diagram type (e.g. `context_diagram`). The `Editor` supports auto-completion for diagram types. Start typing the name of a diagram type and press `Tab` to auto-complete it.
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     context_diagram
 
 .. note::
@@ -36,7 +37,8 @@ All render parameters and their default values are as described in the `capellam
 They can be set in the `Editor` as follows:
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     context_diagram:
         display_parent_relation: false
 
@@ -47,7 +49,8 @@ Custom diagram collection description
 The `Custom Diagram <https://dsd-dbs.github.io/capellambse-context-diagrams/realization_view/>`_ is a special diagram type that allows you to define your own diagram collection. To define the Custom Diagram collection in CCDD, you can provide a YAML description of the collection in the `Editor`, e.g.:
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     custom_diagram:
         unify_edge_direction: UNIFORM
         display_parent_relation: true
@@ -63,7 +66,8 @@ The `Custom Diagram <https://dsd-dbs.github.io/capellambse-context-diagrams/real
 At every step of the collection, you can either `get` or `include` elements. `get` will simply get the element and `include` will include the element in the collection. `name` is the attribute name.
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     get:
         - name: inputs
         include:
@@ -86,7 +90,8 @@ In the example above, we first `get` all the inputs of our target element and it
 Whenever you have a list of elements and you want to filter them, you can use the `filter` keyword. The `filter` keyword takes a dictionary as an argument, which should have the key as the attribute name and the value as the value you want to filter on.
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     get:
         - name: inputs
         include:
@@ -102,7 +107,8 @@ In the example above, we get all the inputs of our target element and include al
 With the `repeat` keyword, you can repeat the collection. The value of `repeat` should be an integer. If the value is -1, the collection will repeat until no new elements are found. If the value is 0, the collection will not repeat. If the value is 1, the collection will repeat once and so on.
 
 .. code-block:: yaml
-  :linenos:
+    :linenos:
+
     repeat: -1
     get:
         - name: source

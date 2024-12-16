@@ -129,6 +129,9 @@ function triggerSourceCommand(command) {
 }
 
 async function run() {
+    if (!settings.targetUUID) {
+        return;
+    }
     loading.value = true;
     await settings.renderDiagram();
     loading.value = false;
@@ -146,7 +149,7 @@ async function run() {
         </div>
         <div class="flex gap-2 items-center">
             <Button v-tooltip="{ value: settings.superKey + ' + Enter', showDelay: 1000, hideDelay: 300 }" label="Run"
-                @click="run" :disabled="loading" icon="pi pi-play" />
+                @click="run" :disabled="loading || !settings.targetUUID" icon="pi pi-play" />
             <ProgressSpinner
                 :style="'width: 1.5rem; height: 1.5rem; position: absolute; margin: 0 -2.5rem;' + (loading ? 'visibility: visible;' : 'visibility: hidden;')"
                 strokeWidth="8" fill="transparent" />

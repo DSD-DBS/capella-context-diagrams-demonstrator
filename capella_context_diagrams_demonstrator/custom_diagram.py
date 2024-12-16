@@ -6,98 +6,87 @@ from __future__ import annotations
 
 import collections.abc as cabc
 import typing as t
+from dataclasses import dataclass
 
 import capellambse.model as m
 
 
-class CustomCollectorWrapper:
-    """Collect the context for a custom diagram."""
+@dataclass
+class CollectorState:
+    """State of the collector."""
 
-    def __init__(
-        self,
-        target: m.ModelElement,
-        instructions: cabc.MutableMapping[str, t.Any],
-    ) -> None:
-        self.target: m.ModelElement = target
-        self.instructions: cabc.MutableMapping[str, t.Any] = instructions
-        self.repeat_instructions: cabc.MutableMapping[str, t.Any] = {}
-        self.repeat_depth: int = 0
-        self.visited: set[str] = set()
+    repeat_instructions: cabc.MutableMapping[str, t.Any]
+    repeat_depth: int
+    visited: set[str]
 
-    def __call__(self) -> cabc.Iterable[m.ModelElement]:
-        yield from self._perform_instructions(self.target, self.instructions)
 
-    def _matches_filters(
-        self, obj: m.ModelElement, filters: cabc.MutableMapping[str, t.Any]
-    ) -> bool:
-        for key, value in filters.items():
-            if getattr(obj, key) != value:
-                return False
-        return True
+def _perform_instructions(
+    state: CollectorState,
+    obj: m.ModelElement,
+    instructions: cabc.MutableMapping[str, t.Any],
+) -> cabc.Iterable[m.ModelElement]:
+    if max_depth := instructions.pop("repeat", None):
+        state.repeat_instructions = instructions
+        state.repeat_depth = max_depth
+    if get_targets := instructions.get("get"):
+        yield from _perform_get_or_include(
+            state, obj, get_targets, create=False
+        )
+    if include_targets := instructions.get("include"):
+        yield from _perform_get_or_include(
+            state, obj, include_targets, create=True
+        )
+    if not get_targets and not include_targets and state.repeat_depth != 0:
+        state.repeat_depth -= 1
+        yield from _perform_instructions(state, obj, state.repeat_instructions)
 
-    def _perform_instructions(
-        self,
-        obj: m.ModelElement,
-        instructions: cabc.MutableMapping[str, t.Any],
-    ) -> cabc.Iterable[m.ModelElement]:
-        if max_depth := instructions.pop("repeat", None):
-            self.repeat_instructions = instructions
-            self.repeat_depth = max_depth
-        if get_targets := instructions.get("get"):
-            yield from self._perform_get_or_include(
-                obj, get_targets, create=False
-            )
-        if include_targets := instructions.get("include"):
-            yield from self._perform_get_or_include(
-                obj, include_targets, create=True
-            )
-        if not get_targets and not include_targets and self.repeat_depth != 0:
-            self.repeat_depth -= 1
-            yield from self._perform_instructions(
-                obj, self.repeat_instructions
-            )
 
-    def _perform_get_or_include(
-        self,
-        obj: m.ModelElement,
-        targets: (
-            cabc.MutableMapping[str, t.Any]
-            | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
-        ),
-        *,
-        create: bool,
-    ) -> cabc.Iterable[m.ModelElement]:
-        if isinstance(targets, cabc.Mapping):
-            targets = [targets]
-        assert isinstance(targets, cabc.MutableSequence)
-        if self.repeat_depth > 0:
-            self.repeat_depth += len(targets)
-        for i in targets:
-            attr = i.get("name")
-            assert attr, "Attribute name is required."
-            target = getattr(obj, attr, None)
-            if isinstance(target, cabc.Iterable):
-                filters = i.get("filter", {})
-                for item in target:
-                    if item.uuid in self.visited:
-                        continue
-                    self.visited.add(item.uuid)
-                    if not self._matches_filters(item, filters):
-                        continue
-                    if create:
-                        yield item
-                    yield from self._perform_instructions(item, i)
-            elif isinstance(target, m.ModelElement):
-                if target.uuid in self.visited:
+def _perform_get_or_include(
+    state: CollectorState,
+    obj: m.ModelElement,
+    targets: (
+        cabc.MutableMapping[str, t.Any]
+        | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
+    ),
+    *,
+    create: bool,
+) -> cabc.Iterable[m.ModelElement]:
+    if isinstance(targets, cabc.Mapping):
+        targets = [targets]
+    assert isinstance(targets, cabc.MutableSequence)
+    if state.repeat_depth > 0:
+        state.repeat_depth += len(targets)
+    for i in targets:
+        attr = i["name"]
+        target = getattr(obj, attr, None)
+        if isinstance(target, cabc.Iterable):
+            filters = i.get("filter", {})
+            for item in target:
+                if item.uuid in state.visited:
                     continue
-                self.visited.add(target.uuid)
+                state.visited.add(item.uuid)
+                if any(
+                    getattr(obj, key) != value
+                    for key, value in filters.items()
+                ):
+                    continue
                 if create:
-                    yield target
-                yield from self._perform_instructions(target, i)
+                    yield item
+                yield from _perform_instructions(state, item, i)
+        elif isinstance(target, m.ModelElement):
+            if target.uuid in state.visited:
+                continue
+            state.visited.add(target.uuid)
+            if create:
+                yield target
+            yield from _perform_instructions(state, target, i)
 
 
 def collect(
     target: m.ModelElement, instructions: cabc.MutableMapping[str, t.Any]
 ) -> cabc.Iterable[m.ModelElement]:
     """Collect the context for a custom diagram."""
-    return CustomCollectorWrapper(target, instructions)()
+    state = CollectorState(
+        repeat_instructions={}, repeat_depth=0, visited=set()
+    )
+    yield from _perform_instructions(state, target, instructions)
