@@ -7,11 +7,10 @@ from __future__ import annotations
 import collections.abc as cabc
 import typing as t
 from dataclasses import dataclass
-from typing import TypeAlias
 
 import capellambse.model as m
 
-Targets: TypeAlias = (
+Targets: t.TypeAlias = (
     cabc.MutableMapping[str, t.Any]
     | cabc.Sequence[cabc.MutableMapping[str, t.Any]]
 )

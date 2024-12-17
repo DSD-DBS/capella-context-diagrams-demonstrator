@@ -96,8 +96,8 @@ def load_model(model: capellambse.MelodyModel) -> None:
     app.state.model = model
     try:
         collect_all_elements()
-    except Exception as e:
-        raise ValueError(f"Error collecting elements: {e}") from e
+    except Exception as exc:
+        raise ValueError(f"Error collecting elements: {exc}") from exc
 
 
 app.mount(
@@ -146,21 +146,21 @@ async def validate_target(
     """Validate the target object."""
     try:
         app.state.model.by_uuid(request.uuid)
-    except KeyError as e:
+    except KeyError as error:
         return responses.JSONResponse(
             content={
                 "status": "error",
-                "message": str(e),
+                "message": str(error),
                 "name": "UUID not found",
             },
             status_code=400,
         )
-    except Exception as e:
+    except Exception as exc:
         return responses.JSONResponse(
             content={
                 "status": "error",
-                "message": str(e),
-                "name": type(e).__name__,
+                "message": str(exc),
+                "name": type(exc).__name__,
             },
             status_code=500,
         )
@@ -177,10 +177,14 @@ async def render_diagram(
     try:
         target = app.state.model.by_uuid(request.uuid)
         data = yaml.safe_load(request.yaml)
-    except KeyError as e:
-        return helpers.make_error_json_response(str(e), 400, "UUID not found")
-    except Exception as e:
-        return helpers.make_error_json_response(str(e), 400, type(e).__name__)
+    except KeyError as error:
+        return helpers.make_error_json_response(
+            str(error), 400, "UUID not found"
+        )
+    except Exception as exc:
+        return helpers.make_error_json_response(
+            str(exc), 400, type(exc).__name__
+        )
 
     if not isinstance(data, dict):
         if not isinstance(data, str):
@@ -212,8 +216,10 @@ async def render_diagram(
         return helpers.make_json_response(
             "success", diag.name, helpers.modify_svg(content), 200
         )
-    except Exception as e:
-        return helpers.make_error_json_response(str(e), 500, type(e).__name__)
+    except Exception as exc:
+        return helpers.make_error_json_response(
+            str(exc), 500, type(exc).__name__
+        )
 
 
 @app.get("/api/attributes/")
