@@ -13,8 +13,12 @@ import vueDevTools from "vite-plugin-vue-devtools";
 export default defineConfig({
     plugins: [vue(), vueDevTools()],
     define: {
-        VITE_BACKEND_HOST: JSON.stringify(process.env.VITE_BACKEND_HOST),
-        VITE_BACKEND_PORT: JSON.stringify(process.env.VITE_BACKEND_PORT),
+        VITE_CCDD_BACKEND_HOST: JSON.stringify(
+            process.env.VITE_CCDD_BACKEND_HOST
+        ),
+        VITE_CCDD_BACKEND_PORT: JSON.stringify(
+            process.env.VITE_CCDD_BACKEND_PORT
+        ),
     },
     resolve: {
         alias: {

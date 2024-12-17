@@ -9,9 +9,9 @@ import { ref } from "vue";
 
 const BACKEND_URL =
     "http://" +
-    import.meta.env.VITE_BACKEND_HOST +
+    import.meta.env.VITE_CCDD_BACKEND_HOST +
     ":" +
-    import.meta.env.VITE_BACKEND_PORT +
+    import.meta.env.VITE_CCDD_BACKEND_PORT +
     "/api";
 
 export const useSettingsStore = defineStore("settings", () => {
@@ -119,7 +119,7 @@ export const useSettingsStore = defineStore("settings", () => {
             tableContent.value = response.data.repr;
             return response.data.name;
         } catch (error) {
-                tableContent.value = error.response.data.message;
+            tableContent.value = error.response.data.message;
         }
     }
 

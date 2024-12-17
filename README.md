@@ -43,8 +43,8 @@ Then run the following commands to create the static files for the backend:
 ```sh
 cd demo
 npm install
-export VITE_BACKEND_HOST=127.0.0.1
-export VITE_BACKEND_PORT=8000
+export VITE_CCDD_BACKEND_HOST=127.0.0.1
+export VITE_CCDD_BACKEND_PORT=8000
 npm run build
 ```
 

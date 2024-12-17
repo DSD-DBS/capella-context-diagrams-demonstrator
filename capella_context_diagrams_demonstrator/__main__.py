@@ -22,8 +22,8 @@ import capella_context_diagrams_demonstrator
 
 from . import custom_diagram, data_model, helpers
 
-PORT = int(os.getenv("VITE_BACKEND_PORT") or 8000)
-HOST = os.environ.get("VITE_BACKEND_HOST", "127.0.0.1")
+PORT = int(os.getenv("VITE_CCDD_BACKEND_PORT") or 8000)
+HOST = os.environ.get("VITE_CCDD_BACKEND_HOST", "127.0.0.1")
 PATH_TO_FRONTEND = pathlib.Path(os.getenv("VITE_FRONTEND_PATH", "./demo/dist"))
 ELEMENT_TYPES = frozenset(
     {
