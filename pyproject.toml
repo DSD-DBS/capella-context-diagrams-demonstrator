@@ -61,14 +61,6 @@ exclude_also = [
 ]
 skip_covered = true
 
-[tool.docformatter]
-wrap-descriptions = 72
-wrap-summaries = 79
-
-[tool.isort]
-profile = 'black'
-line_length = 79
-
 [tool.mypy]
 check_untyped_defs = true
 disallow_incomplete_defs = true
@@ -115,6 +107,7 @@ extend-select = [
     "FIX",    # flake8-fixme
     "FURB",   # refurb
     "G",      # flake8-logging-format
+    "I",      # isort
     "ICN",    # flake8-import-conventions
     "ISC001", # "Implicitly concatenated string literals on one line"
     "ISC003", # "Explicitly concatenated string should be implicitly concatenated"

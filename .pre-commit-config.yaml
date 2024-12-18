@@ -82,10 +82,6 @@ repos:
           - LICENSES/.license_header_apache.txt
           - --comment-style
           - "..|  |"
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
   - repo: local
     hooks:
       - id: prettier
@@ -97,18 +93,12 @@ repos:
           - 'prettier-plugin-tailwindcss@^0.6.9'
           - 'prettier@^3.4.2'
           - 'tailwindcss@^3.4.14'
-  - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.5
-    hooks:
-      - id: docformatter
-        additional_dependencies:
-          - docformatter[tomli]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.8.3
     hooks:
-      - id: ruff-format
       - id: ruff
-        args: [--extend-ignore=FIX]
+        args: [--extend-ignore=FIX, --fix]
+      - id: ruff-format
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
