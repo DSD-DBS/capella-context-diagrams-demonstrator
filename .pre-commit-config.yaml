@@ -86,6 +86,17 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: prettier --write
+        language: node
+        types_or: [ts, javascript, css, html, vue, markdown]
+        additional_dependencies:
+          - 'prettier-plugin-tailwindcss@^0.6.9'
+          - 'prettier@^3.4.2'
+          - 'tailwindcss@^3.4.14'
   - repo: https://github.com/PyCQA/docformatter
     rev: eb1df347edd128b30cd3368dddc3aa65edcfac38
     hooks:

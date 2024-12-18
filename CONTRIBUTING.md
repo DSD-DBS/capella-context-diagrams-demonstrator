@@ -78,8 +78,7 @@ The key differences are:
 
 - **Docstrings**: The [Numpy style guide] applies here.
 
-  [numpy style guide]:
-    https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
+  [numpy style guide]: https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
 
   When writing docstrings for functions, use the imperative style, as per
   [PEP-257]. For example, write "Do X and Y" instead of "Does X and Y".
@@ -124,7 +123,6 @@ The key differences are:
   typing related classes like `t.TypedDict`.
 
   <!-- prettier-ignore -->
-
   Use the new syntax and classes for typing introduced with Python 3.10.
 
   - Instead of `t.Tuple`, `t.List` etc. use the builtin classes `tuple`, `list`

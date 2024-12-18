@@ -11,18 +11,14 @@ import vueDevTools from "vite-plugin-vue-devtools";
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [vue(), vueDevTools()],
-    define: {
-        VITE_CCDD_BACKEND_HOST: JSON.stringify(
-            process.env.VITE_CCDD_BACKEND_HOST
-        ),
-        VITE_CCDD_BACKEND_PORT: JSON.stringify(
-            process.env.VITE_CCDD_BACKEND_PORT
-        ),
+  plugins: [vue(), vueDevTools()],
+  define: {
+    VITE_CCDD_BACKEND_HOST: JSON.stringify(process.env.VITE_CCDD_BACKEND_HOST),
+    VITE_CCDD_BACKEND_PORT: JSON.stringify(process.env.VITE_CCDD_BACKEND_PORT),
+  },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-    resolve: {
-        alias: {
-            "@": fileURLToPath(new URL("./src", import.meta.url)),
-        },
-    },
+  },
 });
