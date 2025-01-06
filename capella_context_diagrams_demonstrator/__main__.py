@@ -57,7 +57,7 @@ app.add_middleware(
 )
 
 app.state.model = None
-app.state.elements = []
+app.state.elements = {}
 
 
 def collect_all_elements() -> None:
@@ -88,7 +88,10 @@ def collect_all_elements() -> None:
     for layer in (model.pa, model.la, model.sa, model.oa):
         for ele in get_children_recursive(layer):
             if type(ele) in ELEMENT_TYPES:
-                app.state.elements.append({"uuid": ele.uuid, "name": ele.name})
+                app.state.elements[ele.uuid] = {
+                    "uuid": ele.uuid,
+                    "name": ele.name,
+                }
 
 
 def load_model(model: capellambse.MelodyModel) -> None:
@@ -133,7 +136,7 @@ async def get_all_elements() -> responses.JSONResponse:
     return responses.JSONResponse(
         content={
             "status": "success",
-            "elements": app.state.elements,
+            "elements": list(app.state.elements.values()),
         },
         status_code=200,
     )
