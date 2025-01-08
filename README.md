@@ -14,6 +14,17 @@ Demonstrator for Capella Context Diagrams
 
 Read the [full documentation on Github pages](https://dsd-dbs.github.io/capella-context-diagrams-demonstrator).
 
+# Quickstart
+
+Build and run locally with Docker:
+
+```sh
+make build
+make run MODEL_PATH={path_to_model}
+```
+
+The Capella Context Diagrams Demonstrator will be running at `http://localhost:8000`.
+
 # Installation
 
 You can install the latest released version directly from PyPI.
@@ -38,26 +49,11 @@ pip install -e '.[docs,test]'
 pre-commit install
 ```
 
-Then run the following commands to create the static files for the backend:
+Then run the following commands:
 
 ```sh
-cd demo
-npm install
-export VITE_CCDD_BACKEND_HOST=127.0.0.1
-export VITE_CCDD_BACKEND_PORT=8000
-npm run build
-```
-
-To develop the frontend, use the following command:
-
-```sh
-npm run dev
-```
-
-Then run the following command in the root folder to start the backend server:
-
-```sh
-capella-context-diagrams-demonstrator {path_to_model}
+make build-dev
+make run-dev MODEL_PATH={path_to_model}
 ```
 
 The backend server and static frontend will be running at `http://localhost:8000` and the live frontend will be served at `http://localhost:5173`.
