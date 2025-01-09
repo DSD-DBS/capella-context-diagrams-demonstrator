@@ -22,39 +22,39 @@ const app = createApp(App);
 app.use(ToastService);
 
 const MyPreset = definePreset(Aura, {
-    semantic: {
-        primary: {
-            50: "{blue.50}",
-            100: "{blue.100}",
-            200: "{blue.200}",
-            300: "{blue.300}",
-            400: "{blue.400}",
-            500: "{blue.500}",
-            600: "{blue.600}",
-            700: "{blue.700}",
-            800: "{blue.800}",
-            900: "{blue.900}",
-            950: "{blue.950}",
-        },
+  semantic: {
+    primary: {
+      50: "{blue.50}",
+      100: "{blue.100}",
+      200: "{blue.200}",
+      300: "{blue.300}",
+      400: "{blue.400}",
+      500: "{blue.500}",
+      600: "{blue.600}",
+      700: "{blue.700}",
+      800: "{blue.800}",
+      900: "{blue.900}",
+      950: "{blue.950}",
     },
+  },
 });
 
 app.use(PrimeVue, {
-    theme: {
-        preset: MyPreset,
-        options: {
-            darkModeSelector: ".dark",
-        },
+  theme: {
+    preset: MyPreset,
+    options: {
+      darkModeSelector: ".dark",
     },
+  },
 });
 
 app.directive("keyfilter", KeyFilter);
 app.directive("tooltip", Tooltip);
 
 app.use(VueMonacoEditorPlugin, {
-    paths: {
-        vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs",
-    },
+  paths: {
+    vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs",
+  },
 });
 
 app.use(createPinia());
