@@ -65,7 +65,7 @@ repos:
       - id: insert-license
         name: Insert Apache license headers (C-style comments)
         files: '\.(?:s?css|js|ts|vue)$'
-        exclude: '(?:^|/)\..+|svg-pan-zoom\.min\.js'
+        exclude: '(?:^|/)(\..+|.+\.min\.js)$'
         args:
           - --detect-license-in-X-top-lines=15
           - --license-filepath
@@ -127,3 +127,5 @@ repos:
     rev: v2.13.1-beta
     hooks:
       - id: hadolint-docker
+        args:
+          - --ignore=DL3008
