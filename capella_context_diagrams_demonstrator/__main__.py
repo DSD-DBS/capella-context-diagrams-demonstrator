@@ -249,7 +249,7 @@ async def get_attributes(uuid: str) -> responses.JSONResponse:
 def startup(model: capellambse.MelodyModel) -> None:
     """Start the FastAPI server."""
     load_model(model)
-    uvicorn.run(app, host=HOST, port=PORT, reload=True)
+    uvicorn.run(app, host=HOST, port=PORT)
 
 
 if __name__ == "__main__":

@@ -44,7 +44,7 @@ def _perform_instructions(
             state, obj, include_targets, create=True
         )
 
-    if not get_targets and not include_targets and state.repeat_depth > 0:
+    if not get_targets and not include_targets and state.repeat_depth != 0:
         state.repeat_depth -= 1
         yield from _perform_instructions(state, obj, state.repeat_instructions)
 
