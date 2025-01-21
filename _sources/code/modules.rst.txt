@@ -1,0 +1,7 @@
+capella-context-diagrams-demonstrator
+=====================================
+
+.. toctree::
+   :maxdepth: 4
+
+   capella_context_diagrams_demonstrator

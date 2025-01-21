@@ -1,0 +1,37 @@
+capella\_context\_diagrams\_demonstrator package
+================================================
+
+Submodules
+----------
+
+capella\_context\_diagrams\_demonstrator.custom\_diagram module
+---------------------------------------------------------------
+
+.. automodule:: capella_context_diagrams_demonstrator.custom_diagram
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+capella\_context\_diagrams\_demonstrator.data\_model module
+-----------------------------------------------------------
+
+.. automodule:: capella_context_diagrams_demonstrator.data_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+capella\_context\_diagrams\_demonstrator.helpers module
+-------------------------------------------------------
+
+.. automodule:: capella_context_diagrams_demonstrator.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: capella_context_diagrams_demonstrator
+   :members:
+   :undoc-members:
+   :show-inheritance:
