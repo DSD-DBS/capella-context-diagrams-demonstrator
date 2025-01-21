@@ -1,0 +1,24 @@
+# Copyright DB InfraGO AG and contributors
+# SPDX-License-Identifier: Apache-2.0
+
+custom_diagram:
+  slim_center_box: true
+  unify_edge_direction: UNIFORM
+  display_parent_relation: true
+  collect:
+    get:
+      - name: inputs
+        include:
+          - name: exchanges
+      - name: outputs
+        include:
+          - name: exchanges
+      - name: ports
+        include:
+          - name: exchanges
+          - name: links
+      - name: physical_ports
+        include:
+          - name: links
+# A similar built-in diagram can be created with the following configuration:
+# context_diagram

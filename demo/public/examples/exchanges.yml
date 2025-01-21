@@ -1,0 +1,12 @@
+# Copyright DB InfraGO AG and contributors
+# SPDX-License-Identifier: Apache-2.0
+
+custom_diagram:
+  display_parent_relation: true
+  unify_edge_direction: UNIFORM
+  collect:
+    include:
+      - name: allocated_functional_exchanges
+      - name: allocated_interactions
+# A similar built-in diagram can be created with the following configuration:
+# context_diagram
