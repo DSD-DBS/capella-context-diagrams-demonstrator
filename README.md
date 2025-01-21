@@ -25,13 +25,7 @@ make run MODEL_PATH={path_to_model}
 
 The Capella Context Diagrams Demonstrator will be running at `http://localhost:8000`.
 
-# Installation
-
-You can install the latest released version directly from PyPI.
-
-```sh
-pip install capella-context-diagrams-demonstrator
-```
+# Development
 
 To set up a development environment, clone the project and install it into a
 virtual environment.
@@ -53,7 +47,14 @@ Then run the following commands:
 
 ```sh
 make build-dev
-make run-dev MODEL_PATH={path_to_model}
+make run-backend-dev MODEL_PATH={path_to_model}
+```
+
+and in a separate terminal:
+
+```sh
+
+make run-frontend-dev
 ```
 
 The backend server and static frontend will be running at `http://localhost:8000` and the live frontend will be served at `http://localhost:5173`.
