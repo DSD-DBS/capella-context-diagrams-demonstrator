@@ -1,10 +1,10 @@
 # Copyright DB InfraGO AG and contributors
 # SPDX-License-Identifier: Apache-2.0
 
-custom_diagram:
+context_diagram:
   slim_center_box: true
   display_symbols_as_boxes: true
-  unify_edge_direction: SMART
+  edge_direction: SMART
   collect:
     include:
       - name: involved_activities

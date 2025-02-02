@@ -110,7 +110,7 @@ def _process_target(
         )
 
 
-def collect(
+def collector(
     target: m.ModelElement, instructions: cabc.MutableMapping[str, t.Any]
 ) -> cabc.Iterator[m.ModelElement]:
     """Collect model elements based on the provided instructions.

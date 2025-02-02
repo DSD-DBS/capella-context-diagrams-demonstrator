@@ -125,7 +125,7 @@ async def root() -> responses.HTMLResponse:
 
 
 @app.get("/favicon.ico", status_code=200)
-async def favicon() -> responses.HTMLResponse:
+async def favicon() -> responses.FileResponse:
     """Serve the favicon."""
     return responses.FileResponse(PATH_TO_FRONTEND / "favicon.ico")
 
@@ -207,15 +207,16 @@ async def render_diagram(
     try:
         diag = getattr(target, diag_type)
         assert isinstance(attrs, dict)
-        if diag_type == "custom_diagram":
-            instructions = attrs.pop("collect", {})
+        try:
+            instructions = attrs.pop("collect")
             content = diag.render(
                 "svg",
-                collect=custom_diagram.collect(target, instructions),
+                collect=custom_diagram.collector(target, instructions),
                 **attrs,
             )
-        else:
+        except KeyError:
             content = diag.render("svg", **attrs)
+
         return helpers.make_json_response(
             "success", diag.name, helpers.modify_svg(content), 200
         )
