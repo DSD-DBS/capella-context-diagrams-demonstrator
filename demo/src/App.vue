@@ -57,7 +57,6 @@ function handleMount(editorInstance) {
 
 async function handleBeforeMount(monaco) {
   const diag_types = [
-    "custom_diagram",
     "context_diagram",
     "cable_tree",
     "data_flow_view",
@@ -66,18 +65,36 @@ async function handleBeforeMount(monaco) {
   ];
   const properties = [
     "display_parent_relation",
-    "hide_direct_children",
+    "mode",
     "slim_center_box",
     "display_port_labels",
     "port_label_position",
     "display_unused_ports",
     "transparent_background",
     "display_symbols_as_boxes",
-    "unify_edge_direction",
-    "name",
+    "edge_direction",
     "display_derived_interfaces",
+    "display_actor_relation",
+    "hide_context_owner",
+    "include_interface",
+    "include_port_allocations",
+    "hide_functions",
+    "include_children_context",
+    "edgeRouting",
+    "direction",
+    "nodeSizeConstraints",
+    "edgeLabelsSide",
+    "partitioning",
+    "collect",
+    "depth",
+    "super",
+    "sub",
+    "name",
+    "search_direction",
+    "show_owners",
+    "layer_sizing",
   ];
-  const methods = ["get", "include", "filter", "collect", "repeat"];
+  const methods = ["get", "include", "filter", "repeat"];
 
   const customTokenizer = {
     root: [
@@ -120,7 +137,6 @@ async function handleBeforeMount(monaco) {
     "FALSE",
     "null",
     "Null",
-    "Null",
     "~",
   ];
   const commonStrings = [
@@ -137,6 +153,39 @@ async function handleBeforeMount(monaco) {
     "components",
     "involved_activities",
     "involved_functions",
+    "BLACKBOX",
+    "WHITEBOX",
+    "GRAYBOX",
+    "LEFT",
+    "RIGHT",
+    "TREE",
+    "NONE",
+    "SMART",
+    "ALL",
+    "ABOVE",
+    "BELOW",
+    "UNION",
+    "HEIGHT",
+    "WIDTH",
+    "INDIVIDUAL",
+    "UNDEFINED",
+    "POLYLINE",
+    "ORTHOGONAL",
+    "SPLINES",
+    "UP",
+    "DOWN",
+    "PORTS",
+    "NODE_LABELS",
+    "PORT_LABELS",
+    "MINIMUM_SIZE",
+    "ALWAYS_UP",
+    "ALWAYS_DOWN",
+    "DIRECTION_UP",
+    "DIRECTION_DOWN",
+    "SMART_UP",
+    "SMART_DOWN",
+    "ROOT",
+    "ALL",
   ];
 
   monaco.languages.registerCompletionItemProvider("yaml", {
@@ -264,7 +313,7 @@ async function run() {
     </Splitter>
   </main>
   <footer class="flex items-center justify-end px-4 py-2">
-    <p>© 2024 DB InfraGO AG</p>
+    <p>© 2025 DB InfraGO AG</p>
   </footer>
   <Settings ref="settingsModal" />
 </template>

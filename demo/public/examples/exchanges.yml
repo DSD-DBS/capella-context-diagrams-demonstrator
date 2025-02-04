@@ -1,9 +1,9 @@
 # Copyright DB InfraGO AG and contributors
 # SPDX-License-Identifier: Apache-2.0
 
-custom_diagram:
+context_diagram:
   display_parent_relation: true
-  unify_edge_direction: UNIFORM
+  edge_direction: RIGHT
   collect:
     include:
       - name: allocated_functional_exchanges

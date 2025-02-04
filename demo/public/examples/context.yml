@@ -1,9 +1,9 @@
 # Copyright DB InfraGO AG and contributors
 # SPDX-License-Identifier: Apache-2.0
 
-custom_diagram:
+context_diagram:
   slim_center_box: true
-  unify_edge_direction: UNIFORM
+  edge_direction: SMART
   display_parent_relation: true
   collect:
     get:
